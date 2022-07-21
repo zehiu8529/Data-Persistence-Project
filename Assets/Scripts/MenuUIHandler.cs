@@ -9,6 +9,12 @@ public class MenuUIHandler : MonoBehaviour
 {
     public TextMeshProUGUI highestScoreText;
     public TMP_InputField nameInput;
+    public GameObject settingMenu;
+
+    private void Start()
+    {        
+        DataManager.Instance.LoadHighestScore(highestScoreText);
+    }
 
     public void StartGame()
     {
@@ -23,5 +29,25 @@ public class MenuUIHandler : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }    
+
+    public void Done()
+    {
+        settingMenu.gameObject.SetActive(false);
+    }
+
+    public void OpenSetting()
+    {
+        settingMenu.gameObject.SetActive(true);
+    }
+
+    public void SaveColor()
+    {
+        DataManager.Instance.SaveJsonFileColor();
+    }
+
+    public void LoadColor()
+    {
+        DataManager.Instance.LoadJsonFileColor();
     }
 }

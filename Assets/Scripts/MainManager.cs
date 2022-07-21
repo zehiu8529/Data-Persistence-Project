@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
     public int LineCount = 6;
-    public Rigidbody Ball;
+    public GameObject Ball;
+    public GameObject Paddle;
+    public GameObject[] Borders;
 
     public Text ScoreText;
+    public TextMeshProUGUI HighestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -22,6 +26,17 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DataManager.Instance.ChangeObjectsColor(Ball, Paddle, Borders);     
+
+        try
+        {
+            DataManager.Instance.LoadHighestScore(HighestScoreText);
+        }
+        catch
+        {
+            Debug.Log("Run menu scene first");
+        }
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -50,7 +65,7 @@ public class MainManager : MonoBehaviour
                 forceDir.Normalize();
 
                 Ball.transform.SetParent(null);
-                Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                Ball.GetComponent<Rigidbody>().AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
         else if (m_GameOver)
@@ -58,6 +73,10 @@ public class MainManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
             }
         }
     }
@@ -72,5 +91,6 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-    }
+        DataManager.Instance.SaveHighestScore(m_Points);
+    }           
 }

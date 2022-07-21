@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ball Color
+  - Paddle Color
+  - Border Color
   layers:
   - Default
   - TransparentFX
